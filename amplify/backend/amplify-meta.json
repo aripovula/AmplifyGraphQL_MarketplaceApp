@@ -1,0 +1,35 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "marketplacemplify-20190104130026-authRole",
+			"UnauthRoleArn": "arn:aws:iam::520649825970:role/marketplacemplify-20190104130026-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::520649825970:role/marketplacemplify-20190104130026-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "marketplacemplify-20190104130026-deployment",
+			"UnauthRoleName": "marketplacemplify-20190104130026-unauthRole",
+			"StackName": "marketplacemplify-20190104130026",
+			"StackId": "arn:aws:cloudformation:us-east-1:520649825970:stack/marketplacemplify-20190104130026/9da5bda0-104a-11e9-8564-0a182a3cd028"
+		}
+	},
+	"auth": {
+		"cognitoacb039f9": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"storage": {
+		"dsMarketplaceFiles": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"api": {
+		"marketplaceamplify": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS"
+			}
+		}
+	}
+}

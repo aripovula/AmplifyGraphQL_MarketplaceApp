@@ -1,0 +1,9 @@
+{
+    "bucketName": "ds-marketplace-files-amplify-graphql",
+    "authPolicyName": "s3_amplify_f5482434",
+    "unauthPolicyName": "s3_amplify_f5482434",
+    "authRoleName": "marketplacemplify-20190104130026-authRole",
+    "unauthRoleName": "marketplacemplify-20190104130026-unauthRole",
+    "authPermissions": "rw",
+    "unauthPermissions": "r"
+}

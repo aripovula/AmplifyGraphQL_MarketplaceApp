@@ -1,0 +1,9 @@
+{
+    "AppSyncApiName": "marketplaceamplify",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcognitoacb039f9",
+            "Outputs.UserPoolId"
+        ]
+    }
+}
