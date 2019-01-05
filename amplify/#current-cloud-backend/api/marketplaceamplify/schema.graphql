@@ -1,0 +1,206 @@
+    
+    type S3Object 
+    @model
+    {
+      bucket: String!
+      region: String!
+      key: String!
+    }
+
+    type Company 
+    @model
+    @auth(
+      rules: [
+        # if ID match gives create access
+        {allow: owner, ownerField: "id", mutations: [create], queries: [get, list]},
+        # FULL ACCESS
+        { allow: groups, groupsField: "management", mutations: [create, update, delete], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        name: String!
+        locationZipCode: String!
+        creditRating: CreditRating!,
+        yearsOfOperation: Int!,
+        orders: [Order!]! @connection(name: "CompanyOrders")
+        optionsOffered: [Option!]! @connection(name: "CompanyOffers")
+        feedbacksOnProducedProduct: [ProductFeedback!]! @connection(name: "CompanyProductFeedbacks")
+    }
+
+
+    type BlockchainBlock
+    @model
+    @auth(
+      rules: [
+        # CREATE ONLY
+        { allow: groups, groupsField: "management", mutations: [create], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        marketplaceSignatureOnDeal: String!
+        previousHashOnDeal: String!
+        hashOnDeal: String!
+        nonce: Int!
+    }
+
+    type Product
+    @model
+    @auth(
+      rules: [
+        # offeredBy ID match gives full access
+        {allow: owner, ownerField: "offeredBy", mutations: [create, update, delete], queries: [get, list]},
+        # READ ONLY
+        { allow: groups, groupsField: "management", mutations: [], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        name: String!
+        price: Float!
+        offeredBy: String !
+        optionOffered: Option! @connection(name: "OptionProducts")
+        # one to one connection
+        productImage: S3Object @connection
+        available: Int
+        orderedVolume: Int
+        productRating: Float
+        status: OptionStatus
+    }
+
+    type Option
+    @model
+    @auth(
+      rules: [
+        # offeredBy ID match gives full access
+        {allow: owner, ownerField: "offeredBy", mutations: [create, update, delete], queries: [get, list]},
+        # READ ONLY
+        { allow: groups, groupsField: "management", mutations: [], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        status: OptionStatus!
+        products: [Product!]! @connection(name: "OptionProducts")
+        offeredBy: Company! @connection(name: "CompanyOffers")
+    }
+
+    type Order
+    @model
+    @auth(
+      rules: [
+        # orderer ID match gives full access
+        {allow: owner, ownerField: "orderingCo", mutations: [create, update, delete], queries: [get, list]},
+        # READ ONLY
+        { allow: groups, groupsField: "management", mutations: [], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        orderingCo: Company! @connection(name: "CompanyOrders")
+        # ONE TO ONE
+        optionDetails: Option! @connection
+        status: OrderStatus!,
+        volume: Int!
+        time2deliver: Int!
+    }
+
+    type ProductFeedback
+    @model
+    @auth(
+      rules: [
+        # author ID match gives full access
+        {allow: owner, ownerField: "author", mutations: [create, update, delete], queries: [get, list]},
+        # READ ONLY
+        { allow: groups, groupsField: "management", mutations: [], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        product: String!
+        orderNo: String!
+        productRating: Float
+        # author contains ID of Company giving feedback - since no query is planned on who 
+        # gave what feedback connection is not set
+        author: String!
+        # product rating by producers is going to be queried - hence this connection is added
+        producer: Company! @connection(name: "CompanyProductFeedbacks")
+    }
+
+    type CreditSaleRule
+    @model
+    @auth(
+      rules: [
+        # setBy ID match gives full access
+        {allow: owner, ownerField: "setBy", mutations: [create, update, delete], queries: [get, list]},
+        # READ ONLY
+        { allow: groups, groupsField: "management", mutations: [], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        # one to one connection
+        setBy: Company! @connection
+        limitForAAA: Int!
+        limitForAA: Int!
+        limitForA: Int!
+        limitForBBB: Int!
+        limitForBB: Int!
+        limitForB: Int!
+    }
+
+    type BestOptionRule
+    @model
+    @auth(
+      rules: [
+        # setBy ID match gives full access
+        {allow: owner, ownerField: "setBy", mutations: [create, update, delete], queries: [get, list]},
+        # READ ONLY
+        { allow: groups, groupsField: "management", mutations: [], queries: [get, list] },
+        # READ ONLY
+        { allow: groups, groupsField: "members", mutations: [], queries: [get, list] }
+      ]
+    ) {
+        id: ID!
+        setBy: Company! @connection
+        bestOptionType: BestOptionEnum!
+        minProductRating: Float
+    }
+
+    enum CreditRating {
+      AAA
+      AA
+      A
+      BBB
+      BB
+      B
+    }
+
+    enum OptionStatus {
+      EFFECTIVE
+      ON_HOLD_30SEC
+    }
+
+    enum OrderStatus {
+        INFO_REQUESTED
+        PURCHASE_APPROVAL_PENDING
+        CONFIRMED_SHIPMENT_PENDING
+        SHIPPED
+        DELIVERED
+        REJECTED
+    }
+
+  enum BestOptionEnum {
+    LEAST_PRICE
+    FASTEST
+    BEST_DELIVERY_RATING
+    BEST_PRODUCT_RATING
+  }

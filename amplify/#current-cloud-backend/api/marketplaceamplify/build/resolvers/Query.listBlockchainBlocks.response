@@ -1,0 +1,53 @@
+## No Static Group Authorization Rules **
+
+
+## [Start] If not static group authorized, filter items **
+#if( ! $isStaticGroupAuthorized )
+  #set( $items = [] )
+  #foreach( $item in $ctx.result.items )
+    ## [Start] Dynamic Group Authorization Checks **
+    #set( $userGroups = $ctx.identity.claims.get("cognito:groups") )
+    #set( $isLocalDynamicGroupAuthorized = false )
+    ## Authorization rule: { allow: "groups", groupsField: "management" } **
+    #set( $allowedGroups = $item.management )
+    #foreach( $userGroup in $userGroups )
+      #if( $util.isList($allowedGroups) )
+        #if( $allowedGroups.contains($userGroup) )
+          #set( $isLocalDynamicGroupAuthorized = true )
+        #end
+      #end
+      #if( $util.isString($allowedGroups) )
+        #if( $allowedGroups == $userGroup )
+          #set( $isLocalDynamicGroupAuthorized = true )
+        #end
+      #end
+    #end
+    ## Authorization rule: { allow: "groups", groupsField: "members" } **
+    #set( $allowedGroups = $item.members )
+    #foreach( $userGroup in $userGroups )
+      #if( $util.isList($allowedGroups) )
+        #if( $allowedGroups.contains($userGroup) )
+          #set( $isLocalDynamicGroupAuthorized = true )
+        #end
+      #end
+      #if( $util.isString($allowedGroups) )
+        #if( $allowedGroups == $userGroup )
+          #set( $isLocalDynamicGroupAuthorized = true )
+        #end
+      #end
+    #end
+    ## [End] Dynamic Group Authorization Checks **
+
+
+    ## No Owner Authorization Rules **
+
+
+    #if( ($isLocalDynamicGroupAuthorized == true || $isLocalOwnerAuthorized == true) )
+      $util.qr($items.add($item))
+    #end
+  #end
+  #set( $ctx.result.items = $items )
+#end
+## [End] If not static group authorized, filter items **
+
+$util.toJson($ctx.result)

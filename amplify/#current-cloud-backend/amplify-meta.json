@@ -1,14 +1,72 @@
 {
-    "providers": {
-        "awscloudformation": {
-            "AuthRoleName": "marketplacemplify-20190104130026-authRole",
-            "UnauthRoleArn": "arn:aws:iam::520649825970:role/marketplacemplify-20190104130026-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::520649825970:role/marketplacemplify-20190104130026-authRole",
-            "Region": "us-east-1",
-            "DeploymentBucketName": "marketplacemplify-20190104130026-deployment",
-            "UnauthRoleName": "marketplacemplify-20190104130026-unauthRole",
-            "StackName": "marketplacemplify-20190104130026",
-            "StackId": "arn:aws:cloudformation:us-east-1:520649825970:stack/marketplacemplify-20190104130026/9da5bda0-104a-11e9-8564-0a182a3cd028"
-        }
-    }
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "marketplaceamplify-20190104233853-authRole",
+			"UnauthRoleArn": "arn:aws:iam::520649825970:role/marketplaceamplify-20190104233853-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::520649825970:role/marketplaceamplify-20190104233853-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "marketplaceamplify-20190104233853-deployment",
+			"UnauthRoleName": "marketplaceamplify-20190104233853-unauthRole",
+			"StackName": "marketplaceamplify-20190104233853",
+			"StackId": "arn:aws:cloudformation:us-east-1:520649825970:stack/marketplaceamplify-20190104233853/ce816150-10a3-11e9-b7d6-0e33f445a498"
+		}
+	},
+	"auth": {
+		"cognito59c509d8": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/marketplaceamplify-20190104233853-deployment/amplify-cfn-templates/auth/cognito59c509d8-cloudformation-template.yml",
+				"logicalId": "authcognito59c509d8"
+			},
+			"lastPushTimeStamp": "2019-01-05T05:31:50.103Z",
+			"output": {
+				"AppClientSecret": "ct2u4kbht6da3g8sga5fjagdudhrc4c36jpa7tvhf7n4cvrosg8",
+				"UserPoolId": "us-east-1_b17Lh9hPX",
+				"AppClientIDWeb": "5u00p53l728033r7p9epqrslbo",
+				"AppClientID": "4b8duq3880q6d6buim1sssjfq1",
+				"IdentityPoolId": "us-east-1:91151cfd-bac2-4677-ba9d-a51b2d6bf055",
+				"IdentityPoolName": "cognito59c509d8_identitypool_59c509d8",
+				"UserPoolName": "cognito59c509d8_userpool_59c509d8"
+			},
+			"lastPushDirHash": "OtlXZVRRZ8tck+JCEf0x8P3CmJI="
+		}
+	},
+	"storage": {
+		"dsmarketplaceimages": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/marketplaceamplify-20190104233853-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storagedsmarketplaceimages"
+			},
+			"lastPushTimeStamp": "2019-01-05T05:31:50.103Z",
+			"output": {
+				"BucketName": "ds-marketplace-images",
+				"Region": "us-east-1"
+			},
+			"lastPushDirHash": "sJrNfX8oXnzVPVZMwyBOA71pkmQ="
+		}
+	},
+	"api": {
+		"marketplaceamplify": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS",
+				"GraphQLAPIIdOutput": "r6mqkpvfcfbxnahmqmyghgpfrq",
+				"GraphQLAPIEndpointOutput": "https://ukok3bszznaalbnadzu3tn2yym.appsync-api.us-east-1.amazonaws.com/graphql",
+				"GraphQLAPIKeyOutput": "da2-c7vdbn2si5fo3dcjmxeerucjpe",
+				"AuthCognitoUserPoolIdOutput": "us-east-1_b17Lh9hPX",
+				"AuthCognitoUserPoolNativeClientId": "See UserPool: us-east-1_b17Lh9hPX",
+				"AuthCognitoUserPoolJSClientId": "See UserPool: us-east-1_b17Lh9hPX"
+			},
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/marketplaceamplify-20190104233853-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apimarketplaceamplify"
+			},
+			"lastPushTimeStamp": "2019-01-05T05:31:50.103Z",
+			"lastPushDirHash": "upeuQY3kqR/qtUpWmnG8u1zHFwc="
+		}
+	}
 }

@@ -1,0 +1,9 @@
+{
+    "bucketName": "ds-marketplace-images",
+    "authPolicyName": "s3_amplify_b6ebfde7",
+    "unauthPolicyName": "s3_amplify_b6ebfde7",
+    "authRoleName": "marketplaceamplify-20190104233853-authRole",
+    "unauthRoleName": "marketplaceamplify-20190104233853-unauthRole",
+    "authPermissions": "rw",
+    "unauthPermissions": "r"
+}

@@ -1,14 +1,14 @@
 {
     "providers": {
         "awscloudformation": {
-            "AuthRoleName": "marketplacemplify-20190104130026-authRole",
-            "UnauthRoleArn": "arn:aws:iam::520649825970:role/marketplacemplify-20190104130026-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::520649825970:role/marketplacemplify-20190104130026-authRole",
+            "AuthRoleName": "marketplaceamplify-20190104233853-authRole",
+            "UnauthRoleArn": "arn:aws:iam::520649825970:role/marketplaceamplify-20190104233853-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::520649825970:role/marketplaceamplify-20190104233853-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "marketplacemplify-20190104130026-deployment",
-            "UnauthRoleName": "marketplacemplify-20190104130026-unauthRole",
-            "StackName": "marketplacemplify-20190104130026",
-            "StackId": "arn:aws:cloudformation:us-east-1:520649825970:stack/marketplacemplify-20190104130026/9da5bda0-104a-11e9-8564-0a182a3cd028"
+            "DeploymentBucketName": "marketplaceamplify-20190104233853-deployment",
+            "UnauthRoleName": "marketplaceamplify-20190104233853-unauthRole",
+            "StackName": "marketplaceamplify-20190104233853",
+            "StackId": "arn:aws:cloudformation:us-east-1:520649825970:stack/marketplaceamplify-20190104233853/ce816150-10a3-11e9-b7d6-0e33f445a498"
         }
     }
 }
