@@ -1,112 +1,27 @@
+type Picture {
+  id: ID!
+  name: String
+  owner: String
+  visibility: Visibility
+  file: S3Object
+  createdAt: String
+}
+
 type S3Object {
   bucket: String!
   region: String!
   key: String!
 }
 
-type Company {
-  id: ID!
-  name: String!
-  locationZipCode: String!
-  creditRating: CreditRating!
-  yearsOfOperation: Int!
-  orders(filter: ModelOrderFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOrderConnection
-  optionsOffered(filter: ModelOptionFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelOptionConnection
-  feedbacksOnProducedProduct(filter: ModelProductFeedbackFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelProductFeedbackConnection
+enum Visibility {
+  public
+  private
 }
 
-type BlockchainBlock {
-  id: ID!
-  marketplaceSignatureOnDeal: String!
-  previousHashOnDeal: String!
-  hashOnDeal: String!
-  nonce: Int!
-}
-
-type Product {
-  id: ID!
-  name: String!
-  price: Float!
-  offeredBy: String!
-  optionOffered: Option!
-  productImage: S3Object
-  available: Int
-  orderedVolume: Int
-  productRating: Float
-  status: OptionStatus
-}
-
-type Option {
-  id: ID!
-  status: OptionStatus!
-  products(filter: ModelProductFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelProductConnection
-  offeredBy: Company!
-}
-
-type Order {
-  id: ID!
-  orderingCo: Company!
-  optionDetails: Option!
-  status: OrderStatus!
-  volume: Int!
-  time2deliver: Int!
-}
-
-type ProductFeedback {
-  id: ID!
-  product: String!
-  orderNo: String!
-  productRating: Float
-  author: String!
-  producer: Company!
-}
-
-type CreditSaleRule {
-  id: ID!
-  setBy: Company!
-  limitForAAA: Int!
-  limitForAA: Int!
-  limitForA: Int!
-  limitForBBB: Int!
-  limitForBB: Int!
-  limitForB: Int!
-}
-
-type BestOptionRule {
-  id: ID!
-  setBy: Company!
-  bestOptionType: BestOptionEnum!
-  minProductRating: Float
-}
-
-enum CreditRating {
-  AAA
-  AA
-  A
-  BBB
-  BB
-  B
-}
-
-enum OptionStatus {
-  EFFECTIVE
-  ON_HOLD_30SEC
-}
-
-enum OrderStatus {
-  INFO_REQUESTED
-  PURCHASE_APPROVAL_PENDING
-  CONFIRMED_SHIPMENT_PENDING
-  SHIPPED
-  DELIVERED
-  REJECTED
-}
-
-enum BestOptionEnum {
-  LEAST_PRICE
-  FASTEST
-  BEST_DELIVERY_RATING
-  BEST_PRODUCT_RATING
+input S3ObjectInput {
+  bucket: String!
+  region: String!
+  key: String!
 }
 
 enum ModelSortDirection {
@@ -114,8 +29,8 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelS3ObjectConnection {
-  items: [S3Object]
+type ModelPictureConnection {
+  items: [Picture]
   nextToken: String
 }
 
@@ -174,404 +89,51 @@ input ModelBooleanFilterInput {
   eq: Boolean
 }
 
-input ModelS3ObjectFilterInput {
-  bucket: ModelStringFilterInput
-  region: ModelStringFilterInput
-  key: ModelStringFilterInput
-  and: [ModelS3ObjectFilterInput]
-  or: [ModelS3ObjectFilterInput]
-  not: ModelS3ObjectFilterInput
+input ModelPictureFilterInput {
+  id: ModelIDFilterInput
+  name: ModelStringFilterInput
+  owner: ModelStringFilterInput
+  createdAt: ModelStringFilterInput
+  and: [ModelPictureFilterInput]
+  or: [ModelPictureFilterInput]
+  not: ModelPictureFilterInput
 }
 
 type Query {
-  getS3Object(id: ID!): S3Object
-  listS3Objects(filter: ModelS3ObjectFilterInput, limit: Int, nextToken: String): ModelS3ObjectConnection
-  getCompany(id: ID!): Company
-  listCompanys(filter: ModelCompanyFilterInput, limit: Int, nextToken: String): ModelCompanyConnection
-  getBlockchainBlock(id: ID!): BlockchainBlock
-  listBlockchainBlocks(filter: ModelBlockchainBlockFilterInput, limit: Int, nextToken: String): ModelBlockchainBlockConnection
-  getProduct(id: ID!): Product
-  listProducts(filter: ModelProductFilterInput, limit: Int, nextToken: String): ModelProductConnection
-  getOption(id: ID!): Option
-  listOptions(filter: ModelOptionFilterInput, limit: Int, nextToken: String): ModelOptionConnection
-  getOrder(id: ID!): Order
-  listOrders(filter: ModelOrderFilterInput, limit: Int, nextToken: String): ModelOrderConnection
-  getProductFeedback(id: ID!): ProductFeedback
-  listProductFeedbacks(filter: ModelProductFeedbackFilterInput, limit: Int, nextToken: String): ModelProductFeedbackConnection
-  getCreditSaleRule(id: ID!): CreditSaleRule
-  listCreditSaleRules(filter: ModelCreditSaleRuleFilterInput, limit: Int, nextToken: String): ModelCreditSaleRuleConnection
-  getBestOptionRule(id: ID!): BestOptionRule
-  listBestOptionRules(filter: ModelBestOptionRuleFilterInput, limit: Int, nextToken: String): ModelBestOptionRuleConnection
+  getPicture(id: ID!): Picture
+  listPictures(filter: ModelPictureFilterInput, limit: Int, nextToken: String): ModelPictureConnection
 }
 
-input CreateS3ObjectInput {
-  bucket: String!
-  region: String!
-  key: String!
+input CreatePictureInput {
+  id: ID
+  name: String
+  owner: String
+  visibility: Visibility
+  file: S3ObjectInput
+  createdAt: String
 }
 
-input UpdateS3ObjectInput {
-  bucket: String
-  region: String
-  key: String
+input UpdatePictureInput {
+  id: ID!
+  name: String
+  owner: String
+  visibility: Visibility
+  file: S3ObjectInput
+  createdAt: String
 }
 
-input DeleteS3ObjectInput {
+input DeletePictureInput {
   id: ID
 }
 
 type Mutation {
-  createS3Object(input: CreateS3ObjectInput!): S3Object
-  updateS3Object(input: UpdateS3ObjectInput!): S3Object
-  deleteS3Object(input: DeleteS3ObjectInput!): S3Object
-  createCompany(input: CreateCompanyInput!): Company
-  updateCompany(input: UpdateCompanyInput!): Company
-  deleteCompany(input: DeleteCompanyInput!): Company
-  createBlockchainBlock(input: CreateBlockchainBlockInput!): BlockchainBlock
-  updateBlockchainBlock(input: UpdateBlockchainBlockInput!): BlockchainBlock
-  deleteBlockchainBlock(input: DeleteBlockchainBlockInput!): BlockchainBlock
-  createProduct(input: CreateProductInput!): Product
-  updateProduct(input: UpdateProductInput!): Product
-  deleteProduct(input: DeleteProductInput!): Product
-  createOption(input: CreateOptionInput!): Option
-  updateOption(input: UpdateOptionInput!): Option
-  deleteOption(input: DeleteOptionInput!): Option
-  createOrder(input: CreateOrderInput!): Order
-  updateOrder(input: UpdateOrderInput!): Order
-  deleteOrder(input: DeleteOrderInput!): Order
-  createProductFeedback(input: CreateProductFeedbackInput!): ProductFeedback
-  updateProductFeedback(input: UpdateProductFeedbackInput!): ProductFeedback
-  deleteProductFeedback(input: DeleteProductFeedbackInput!): ProductFeedback
-  createCreditSaleRule(input: CreateCreditSaleRuleInput!): CreditSaleRule
-  updateCreditSaleRule(input: UpdateCreditSaleRuleInput!): CreditSaleRule
-  deleteCreditSaleRule(input: DeleteCreditSaleRuleInput!): CreditSaleRule
-  createBestOptionRule(input: CreateBestOptionRuleInput!): BestOptionRule
-  updateBestOptionRule(input: UpdateBestOptionRuleInput!): BestOptionRule
-  deleteBestOptionRule(input: DeleteBestOptionRuleInput!): BestOptionRule
+  createPicture(input: CreatePictureInput!): Picture
+  updatePicture(input: UpdatePictureInput!): Picture
+  deletePicture(input: DeletePictureInput!): Picture
 }
 
 type Subscription {
-  onCreateS3Object: S3Object @aws_subscribe(mutations: ["createS3Object"])
-  onUpdateS3Object: S3Object @aws_subscribe(mutations: ["updateS3Object"])
-  onDeleteS3Object: S3Object @aws_subscribe(mutations: ["deleteS3Object"])
-  onCreateCompany: Company @aws_subscribe(mutations: ["createCompany"])
-  onUpdateCompany: Company @aws_subscribe(mutations: ["updateCompany"])
-  onDeleteCompany: Company @aws_subscribe(mutations: ["deleteCompany"])
-  onCreateBlockchainBlock: BlockchainBlock @aws_subscribe(mutations: ["createBlockchainBlock"])
-  onUpdateBlockchainBlock: BlockchainBlock @aws_subscribe(mutations: ["updateBlockchainBlock"])
-  onDeleteBlockchainBlock: BlockchainBlock @aws_subscribe(mutations: ["deleteBlockchainBlock"])
-  onCreateProduct: Product @aws_subscribe(mutations: ["createProduct"])
-  onUpdateProduct: Product @aws_subscribe(mutations: ["updateProduct"])
-  onDeleteProduct: Product @aws_subscribe(mutations: ["deleteProduct"])
-  onCreateOption: Option @aws_subscribe(mutations: ["createOption"])
-  onUpdateOption: Option @aws_subscribe(mutations: ["updateOption"])
-  onDeleteOption: Option @aws_subscribe(mutations: ["deleteOption"])
-  onCreateOrder: Order @aws_subscribe(mutations: ["createOrder"])
-  onUpdateOrder: Order @aws_subscribe(mutations: ["updateOrder"])
-  onDeleteOrder: Order @aws_subscribe(mutations: ["deleteOrder"])
-  onCreateProductFeedback: ProductFeedback @aws_subscribe(mutations: ["createProductFeedback"])
-  onUpdateProductFeedback: ProductFeedback @aws_subscribe(mutations: ["updateProductFeedback"])
-  onDeleteProductFeedback: ProductFeedback @aws_subscribe(mutations: ["deleteProductFeedback"])
-  onCreateCreditSaleRule: CreditSaleRule @aws_subscribe(mutations: ["createCreditSaleRule"])
-  onUpdateCreditSaleRule: CreditSaleRule @aws_subscribe(mutations: ["updateCreditSaleRule"])
-  onDeleteCreditSaleRule: CreditSaleRule @aws_subscribe(mutations: ["deleteCreditSaleRule"])
-  onCreateBestOptionRule: BestOptionRule @aws_subscribe(mutations: ["createBestOptionRule"])
-  onUpdateBestOptionRule: BestOptionRule @aws_subscribe(mutations: ["updateBestOptionRule"])
-  onDeleteBestOptionRule: BestOptionRule @aws_subscribe(mutations: ["deleteBestOptionRule"])
-}
-
-type ModelCompanyConnection {
-  items: [Company]
-  nextToken: String
-}
-
-input ModelCompanyFilterInput {
-  id: ModelIDFilterInput
-  name: ModelStringFilterInput
-  locationZipCode: ModelStringFilterInput
-  yearsOfOperation: ModelIntFilterInput
-  and: [ModelCompanyFilterInput]
-  or: [ModelCompanyFilterInput]
-  not: ModelCompanyFilterInput
-}
-
-input CreateCompanyInput {
-  id: ID
-  name: String!
-  locationZipCode: String!
-  creditRating: CreditRating!
-  yearsOfOperation: Int!
-}
-
-input UpdateCompanyInput {
-  id: ID!
-  name: String
-  locationZipCode: String
-  creditRating: CreditRating
-  yearsOfOperation: Int
-}
-
-input DeleteCompanyInput {
-  id: ID
-}
-
-type ModelBlockchainBlockConnection {
-  items: [BlockchainBlock]
-  nextToken: String
-}
-
-input ModelBlockchainBlockFilterInput {
-  id: ModelIDFilterInput
-  marketplaceSignatureOnDeal: ModelStringFilterInput
-  previousHashOnDeal: ModelStringFilterInput
-  hashOnDeal: ModelStringFilterInput
-  nonce: ModelIntFilterInput
-  and: [ModelBlockchainBlockFilterInput]
-  or: [ModelBlockchainBlockFilterInput]
-  not: ModelBlockchainBlockFilterInput
-}
-
-input CreateBlockchainBlockInput {
-  id: ID
-  marketplaceSignatureOnDeal: String!
-  previousHashOnDeal: String!
-  hashOnDeal: String!
-  nonce: Int!
-}
-
-input UpdateBlockchainBlockInput {
-  id: ID!
-  marketplaceSignatureOnDeal: String
-  previousHashOnDeal: String
-  hashOnDeal: String
-  nonce: Int
-}
-
-input DeleteBlockchainBlockInput {
-  id: ID
-}
-
-type ModelProductConnection {
-  items: [Product]
-  nextToken: String
-}
-
-input ModelProductFilterInput {
-  id: ModelIDFilterInput
-  name: ModelStringFilterInput
-  price: ModelFloatFilterInput
-  offeredBy: ModelStringFilterInput
-  available: ModelIntFilterInput
-  orderedVolume: ModelIntFilterInput
-  productRating: ModelFloatFilterInput
-  and: [ModelProductFilterInput]
-  or: [ModelProductFilterInput]
-  not: ModelProductFilterInput
-}
-
-input CreateProductInput {
-  id: ID
-  name: String!
-  price: Float!
-  offeredBy: String!
-  available: Int
-  orderedVolume: Int
-  productRating: Float
-  status: OptionStatus
-  productOptionOfferedId: ID!
-  productProductImageId: ID
-}
-
-input UpdateProductInput {
-  id: ID!
-  name: String
-  price: Float
-  offeredBy: String
-  available: Int
-  orderedVolume: Int
-  productRating: Float
-  status: OptionStatus
-  productOptionOfferedId: ID
-  productProductImageId: ID
-}
-
-input DeleteProductInput {
-  id: ID
-}
-
-type ModelOptionConnection {
-  items: [Option]
-  nextToken: String
-}
-
-input ModelOptionFilterInput {
-  id: ModelIDFilterInput
-  and: [ModelOptionFilterInput]
-  or: [ModelOptionFilterInput]
-  not: ModelOptionFilterInput
-}
-
-input CreateOptionInput {
-  id: ID
-  status: OptionStatus!
-  optionOfferedById: ID!
-}
-
-input UpdateOptionInput {
-  id: ID!
-  status: OptionStatus
-  optionOfferedById: ID
-}
-
-input DeleteOptionInput {
-  id: ID
-}
-
-type ModelOrderConnection {
-  items: [Order]
-  nextToken: String
-}
-
-input ModelOrderFilterInput {
-  id: ModelIDFilterInput
-  volume: ModelIntFilterInput
-  time2deliver: ModelIntFilterInput
-  and: [ModelOrderFilterInput]
-  or: [ModelOrderFilterInput]
-  not: ModelOrderFilterInput
-}
-
-input CreateOrderInput {
-  id: ID
-  status: OrderStatus!
-  volume: Int!
-  time2deliver: Int!
-  orderOrderingCoId: ID!
-  orderOptionDetailsId: ID!
-}
-
-input UpdateOrderInput {
-  id: ID!
-  status: OrderStatus
-  volume: Int
-  time2deliver: Int
-  orderOrderingCoId: ID
-  orderOptionDetailsId: ID
-}
-
-input DeleteOrderInput {
-  id: ID
-}
-
-type ModelProductFeedbackConnection {
-  items: [ProductFeedback]
-  nextToken: String
-}
-
-input ModelProductFeedbackFilterInput {
-  id: ModelIDFilterInput
-  product: ModelStringFilterInput
-  orderNo: ModelStringFilterInput
-  productRating: ModelFloatFilterInput
-  author: ModelStringFilterInput
-  and: [ModelProductFeedbackFilterInput]
-  or: [ModelProductFeedbackFilterInput]
-  not: ModelProductFeedbackFilterInput
-}
-
-input CreateProductFeedbackInput {
-  id: ID
-  product: String!
-  orderNo: String!
-  productRating: Float
-  author: String!
-  productFeedbackProducerId: ID!
-}
-
-input UpdateProductFeedbackInput {
-  id: ID!
-  product: String
-  orderNo: String
-  productRating: Float
-  author: String
-  productFeedbackProducerId: ID
-}
-
-input DeleteProductFeedbackInput {
-  id: ID
-}
-
-type ModelCreditSaleRuleConnection {
-  items: [CreditSaleRule]
-  nextToken: String
-}
-
-input ModelCreditSaleRuleFilterInput {
-  id: ModelIDFilterInput
-  limitForAAA: ModelIntFilterInput
-  limitForAA: ModelIntFilterInput
-  limitForA: ModelIntFilterInput
-  limitForBBB: ModelIntFilterInput
-  limitForBB: ModelIntFilterInput
-  limitForB: ModelIntFilterInput
-  and: [ModelCreditSaleRuleFilterInput]
-  or: [ModelCreditSaleRuleFilterInput]
-  not: ModelCreditSaleRuleFilterInput
-}
-
-input CreateCreditSaleRuleInput {
-  id: ID
-  limitForAAA: Int!
-  limitForAA: Int!
-  limitForA: Int!
-  limitForBBB: Int!
-  limitForBB: Int!
-  limitForB: Int!
-  creditSaleRuleSetById: ID!
-}
-
-input UpdateCreditSaleRuleInput {
-  id: ID!
-  limitForAAA: Int
-  limitForAA: Int
-  limitForA: Int
-  limitForBBB: Int
-  limitForBB: Int
-  limitForB: Int
-  creditSaleRuleSetById: ID
-}
-
-input DeleteCreditSaleRuleInput {
-  id: ID
-}
-
-type ModelBestOptionRuleConnection {
-  items: [BestOptionRule]
-  nextToken: String
-}
-
-input ModelBestOptionRuleFilterInput {
-  id: ModelIDFilterInput
-  minProductRating: ModelFloatFilterInput
-  and: [ModelBestOptionRuleFilterInput]
-  or: [ModelBestOptionRuleFilterInput]
-  not: ModelBestOptionRuleFilterInput
-}
-
-input CreateBestOptionRuleInput {
-  id: ID
-  bestOptionType: BestOptionEnum!
-  minProductRating: Float
-  bestOptionRuleSetById: ID!
-}
-
-input UpdateBestOptionRuleInput {
-  id: ID!
-  bestOptionType: BestOptionEnum
-  minProductRating: Float
-  bestOptionRuleSetById: ID
-}
-
-input DeleteBestOptionRuleInput {
-  id: ID
+  onCreatePicture: Picture @aws_subscribe(mutations: ["createPicture"])
+  onUpdatePicture: Picture @aws_subscribe(mutations: ["updatePicture"])
+  onDeletePicture: Picture @aws_subscribe(mutations: ["deletePicture"])
 }

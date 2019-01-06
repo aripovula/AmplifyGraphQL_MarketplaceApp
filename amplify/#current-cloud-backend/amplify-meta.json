@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/marketplaceamplify-20190104233853-deployment/amplify-cfn-templates/auth/cognito59c509d8-cloudformation-template.yml",
 				"logicalId": "authcognito59c509d8"
 			},
-			"lastPushTimeStamp": "2019-01-05T05:31:50.103Z",
+			"lastPushTimeStamp": "2019-01-06T05:07:46.405Z",
 			"output": {
 				"AppClientSecret": "ct2u4kbht6da3g8sga5fjagdudhrc4c36jpa7tvhf7n4cvrosg8",
 				"UserPoolId": "us-east-1_b17Lh9hPX",
@@ -40,7 +40,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/marketplaceamplify-20190104233853-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
 				"logicalId": "storagedsmarketplaceimages"
 			},
-			"lastPushTimeStamp": "2019-01-05T05:31:50.103Z",
+			"lastPushTimeStamp": "2019-01-06T05:07:46.415Z",
 			"output": {
 				"BucketName": "ds-marketplace-images",
 				"Region": "us-east-1"
@@ -65,8 +65,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/marketplaceamplify-20190104233853-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apimarketplaceamplify"
 			},
-			"lastPushTimeStamp": "2019-01-05T05:31:50.103Z",
-			"lastPushDirHash": "upeuQY3kqR/qtUpWmnG8u1zHFwc="
+			"lastPushTimeStamp": "2019-01-06T05:07:48.380Z",
+			"lastPushDirHash": "hU9x9vM0he4BTUF+R15tB/eRSR0="
 		}
 	}
 }

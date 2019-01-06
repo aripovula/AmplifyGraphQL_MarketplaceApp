@@ -1,77 +1,70 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
-import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
-import aws_exports from './aws-exports';
-import { withAuthenticator, S3Album } from 'aws-amplify-react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
-Amplify.configure(aws_exports);
+import 'semantic-ui-css/semantic.min.css'
 
-const listCompanys = `query listTodos {
-  listCompanys{
-    items{
-      id
-      name
-      locationZipCode
-      creditRating
-      yearsOfOperation
-    }
-  }
-}`
+//AppSync and Apollo libraries
+import AWSAppSyncClient from "aws-appsync";
+import { Rehydrated } from 'aws-appsync-react';
+import { ApolloProvider } from 'react-apollo';
 
-const addCompany = `mutation createCompany($name:String! $locationZipCode:String! $creditRating:CreditRating! $yearsOfOperation:Int!) {
-  createCompany(input:{
-    name:$name
-    locationZipCode:$locationZipCode
-    creditRating:$creditRating
-    yearsOfOperation:$yearsOfOperation
-  }){
-    id
-    name
-    locationZipCode
-    creditRating
-    yearsOfOperation
-  }
-}`
+//Amplify
+import Amplify, { Auth } from 'aws-amplify';
+import { withAuthenticator } from 'aws-amplify-react';
+
+// Components
+import AllCompanies from "./Components/AllCompanies";
+import AllProducts from "./Components/AllProducts";
+import AllBlocks from "./Components/AllBlocks";
+import AllPhotos from "./Components/AllPhotos";
+import AddPhoto from "./Components/AddPhoto";
+
+
+// Amplify init
+import awsconfig from './aws-exports';
+Amplify.configure(awsconfig);
+
+const GRAPHQL_API_REGION = awsconfig.aws_appsync_region
+const GRAPHQL_API_ENDPOINT_URL = awsconfig.aws_appsync_graphqlEndpoint
+const S3_BUCKET_REGION = awsconfig.aws_user_files_s3_bucket_region
+const S3_BUCKET_NAME = awsconfig.aws_user_files_s3_bucket
+const AUTH_TYPE = awsconfig.aws_appsync_authenticationType
+
+// AppSync client instantiation
+const client = new AWSAppSyncClient({
+  url: GRAPHQL_API_ENDPOINT_URL,
+  region: GRAPHQL_API_REGION,
+  auth: {
+    type: AUTH_TYPE,
+    // Get the currently logged in users credential.
+    jwtToken: async () => (await Auth.currentSession()).getAccessToken().getJwtToken(),
+  },
+  // Amplify uses Amazon IAM to authorize calls to Amazon S3. This provides the relevant IAM credentials.
+  complexObjectsCredentials: () => Auth.currentCredentials()
+});
 
 class App extends Component {
-
-  uploadFile = (evt) => {
-    const file = evt.target.files[0];
-    const name = file.name;
-
-    Storage.put(name, file).then(() => {
-      this.setState({ file: name });
-    })
-  }
-
-  addCompanyMutation = async () => {
-    const companyDetails = {
-      name: 'Assemble Works Ltd.',
-      locationZipCode: '12345',
-      creditRating: 'BB',
-      yearsOfOperation: 2
-    };
-    const newEvent = await API.graphql(graphqlOperation(addCompany, companyDetails));
-    alert(JSON.stringify(newEvent));
-  }
-
-  listQuery = async () => {
-    console.log('listing companies');
-    const allCompanies = await API.graphql(graphqlOperation(listCompanys));
-    alert(JSON.stringify(allCompanies));
-  }
 
   render() {
     return (
       <div className="App">
-        <p> Pick a file</p>
-        <input type="file" onChange={this.uploadFile} />
-        <button onClick={this.listQuery}>GraphQL Query</button>
-        <button onClick={this.addCompanyMutation}>GraphQL Mutation</button>
-        <S3Album level="private" path='' />
+        <div className="App-content">
+          <div className="App-content">
+            <AddPhoto options={{ bucket: S3_BUCKET_NAME, region: S3_BUCKET_REGION }} />
+            <AllPhotos />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
-export default withAuthenticator(App, true);
+const AppWithAuth = withAuthenticator(App, true);
+
+export default () => (
+  <ApolloProvider client={client}>
+    <Rehydrated>
+      <AppWithAuth />
+    </Rehydrated>
+  </ApolloProvider>
+);
